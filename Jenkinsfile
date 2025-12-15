@@ -10,7 +10,7 @@ pipeline {
             }
         }
 
-        stage("Build") {
+        stage("Build and Test") {
             steps {
                 sh 'docker build -t gopal161/node-todo-test:latest .'
             }
@@ -31,12 +31,6 @@ pipeline {
                         docker logout
                     '''
                 }
-            }
-        }
-
-        stage("Test") {
-            steps {
-                echo "Testing the new build"
             }
         }
 
