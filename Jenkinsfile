@@ -12,7 +12,7 @@ pipeline {
 
         stage("Build and Test") {
             steps {
-                sh 'docker build -t gopal161/node-todo-test:latest .'
+                sh 'docker bui -t gopal161/node-todo-test:latest .'
             }
         }
 
