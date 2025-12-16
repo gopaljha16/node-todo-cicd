@@ -10,6 +10,12 @@ pipeline {
             }
         }
 
+        stage("Trivy File System Scan"){
+            steps{
+                sh "trivy fs . -o result.json"
+            }
+        }
+
         stage("Build and Test") {
             steps {
                 sh 'docker build -t gopal161/node-todo-test:latest .'
