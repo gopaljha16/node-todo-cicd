@@ -1,6 +1,6 @@
 @Library("Shared") _
 pipeline {
-    agent { label "node-agent"}
+    agent { label "node-agent" }
 
     stages {
 
@@ -57,7 +57,7 @@ pipeline {
             }
         }
     }
-post{
+post {
     // success{
     //     script{
     //         emailext from:'gopaljha9398@gmail.com',
@@ -75,6 +75,6 @@ post{
     // }
     // }
 
-    email_notification("gopaljha9398@gmail.com" ,"gopaljha9398715741@gmail.com" )
+    email_notification("gopaljha9398@gmail.com" ,"gopaljha9398715741@gmail.com")
 }
 }
