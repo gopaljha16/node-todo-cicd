@@ -1,3 +1,4 @@
+@Library("Shared") _
 pipeline {
     agent { label "node-agent"}
 
@@ -5,14 +6,17 @@ pipeline {
 
         stage("Code") {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/gopaljha16/node-todo-cicd.git'
+               script{
+                clone("https://github.com/gopaljha16/node-todo-cicd.git" , "main")
+               }
             }
         }
 
         stage("Trivy File System Scan"){
             steps{
-                sh "trivy fs . -o result.json"
+                script{
+                    trivy_fs()
+                }
             }
         }
 
@@ -24,44 +28,53 @@ pipeline {
 
         stage("Push") {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: "dockerHub",
-                        usernameVariable: "dockerHubUser",
-                        passwordVariable: "dockerHubPassword"
-                    )
-                ]) {
-                    sh '''
-                        echo $dockerHubPassword | docker login -u $dockerHubUser --password-stdin
-                        docker push gopal161/node-todo-test:latest
-                        docker logout
-                    '''
+                // withCredentials([
+                //     usernamePassword(
+                //         credentialsId: "dockerHub",
+                //         usernameVariable: "dockerHubUser",
+                //         passwordVariable: "dockerHubPassword"
+                //     )
+                // ]) {
+                //     sh '''
+                //         echo $dockerHubPassword | docker login -u $dockerHubUser --password-stdin
+                //         docker push gopal161/node-todo-test:latest
+                //         docker logout
+                //     '''
+                // }
+
+                script{
+                    docker_push("dockerHub", "node-todo-test:latest")
                 }
             }
         }
 
         stage("Deploy") {
             steps {
-                sh "docker-compose down && docker-compose up -d"
+                // sh "docker-compose down && docker-compose up -d"
+                script{
+                    docker_deploy()
+                }
             }
         }
     }
 post{
-    success{
-        script{
-            emailext from:'gopaljha9398@gmail.com',
-            to:"gopaljha9398715741@gmail.com",
-            body:"Deployed Successfully your node application check in your ip",
-            subject:"Build sucesss"
-    }
-    }
-    failure{
-        script{
-            emailext from:'gopaljha9398@gmail.com',
-            to:"gopaljha9398715741@gmail.com",
-            body:"Build Failed Check the console for more information",
-            subject:"Build Failed"
-    }
-    }
+    // success{
+    //     script{
+    //         emailext from:'gopaljha9398@gmail.com',
+    //         to:"gopaljha9398715741@gmail.com",
+    //         body:"Deployed Successfully your node application check in your ip",
+    //         subject:"Build sucesss"
+    // }
+    // }
+    // failure{
+    //     script{
+    //         emailext from:'gopaljha9398@gmail.com',
+    //         to:"gopaljha9398715741@gmail.com",
+    //         body:"Build Failed Check the console for more information",
+    //         subject:"Build Failed"
+    // }
+    // }
+
+    email_notification("gopaljha9398@gmail.com" ,"gopaljha9398715741@gmail.com" )
 }
 }
