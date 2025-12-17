@@ -57,24 +57,26 @@ pipeline {
             }
         }
     }
-post {
-    // success{
-    //     script{
-    //         emailext from:'gopaljha9398@gmail.com',
-    //         to:"gopaljha9398715741@gmail.com",
-    //         body:"Deployed Successfully your node application check in your ip",
-    //         subject:"Build sucesss"
-    // }
-    // }
-    // failure{
-    //     script{
-    //         emailext from:'gopaljha9398@gmail.com',
-    //         to:"gopaljha9398715741@gmail.com",
-    //         body:"Build Failed Check the console for more information",
-    //         subject:"Build Failed"
-    // }
-    // }
 
-    email_notification("gopaljha9398@gmail.com" ,"gopaljha9398715741@gmail.com")
-}
+ post {
+        success {
+            script {
+                email_notification(
+                    "gopaljha9398@gmail.com",
+                    "gopaljha9398715741@gmail.com",
+                    "SUCCESS"
+                )
+            }
+        }
+
+        failure {
+            script {
+                email_notification(
+                    "gopaljha9398@gmail.com",
+                    "gopaljha9398715741@gmail.com",
+                    "FAILURE"
+                )
+            }
+        }
+    }
 }
