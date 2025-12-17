@@ -1,6 +1,6 @@
 @Library("Shared") _
 pipeline {
-    agent { label "node-agent" }
+    agent { label "agent2" }
 
     stages {
 
@@ -28,22 +28,18 @@ pipeline {
 
         stage("Push") {
             steps {
-                // withCredentials([
-                //     usernamePassword(
-                //         credentialsId: "dockerHub",
-                //         usernameVariable: "dockerHubUser",
-                //         passwordVariable: "dockerHubPassword"
-                //     )
-                // ]) {
-                //     sh '''
-                //         echo $dockerHubPassword | docker login -u $dockerHubUser --password-stdin
-                //         docker push gopal161/node-todo-test:latest
-                //         docker logout
-                //     '''
-                // }
-
-                script{
-                    docker_push("dockerHub", "node-todo-test:latest")
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: "dockerHub",
+                        usernameVariable: "dockerHubUser",
+                        passwordVariable: "dockerHubPassword"
+                    )
+                ]) {
+                    sh '''
+                        echo $dockerHubPassword | docker login -u $dockerHubUser --password-stdin
+                        docker push gopal161/node-todo-test:latest
+                        docker logout
+                    '''
                 }
             }
         }
